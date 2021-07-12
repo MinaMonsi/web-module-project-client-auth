@@ -4,8 +4,9 @@ import axios from 'axios';
 class Login extends React.Component {
     state = {
         credentials: {
+            isLoading: false,
             username: '',
-        password: ''        
+            password: ''        
         }
     };
 
@@ -20,13 +21,15 @@ class Login extends React.Component {
 
     login = e => {
         e.preventDefault();
+        //use axios to do post request
         axios.post('http://localhost:5000/api/login', this.state.credentials)
         .then(res => {
-            console.log("happy path!", res.data.payload);
+            //if request is successful, console.log token
+            console.log("happy path", res.data.payload);
             localStorage.setItem('token', res.data.payload);
             this.props.history.push("/protected");
         })
-    
+        //if request is unsuccessful, show error
         .catch(err => console.log("sad path", err))
 
     }
@@ -40,12 +43,14 @@ class Login extends React.Component {
                 name="username"
                 placeholder="username"
                 value={this.state.credentials.username}
+                onChange={this.handleChange}
                 />
                 <input
                 type="password"
                 name="password"
                 placeholder="password"
                 value={this.state.credentials.password}
+                onChange={this.handleChange}
                 />
                 <button>Log In</button>
             </form>
